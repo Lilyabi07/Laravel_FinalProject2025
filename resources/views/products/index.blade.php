@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@include('partials.flash')
 
 @section('content')
 <div class="min-h-screen bg-[#001220] flex flex-col items-center pt-16 pb-16 relative overflow-hidden">

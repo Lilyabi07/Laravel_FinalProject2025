@@ -73,24 +73,31 @@ class CheckoutController extends Controller
                                     ->sum(fn($i) => $i['price'] * $i['quantity']),
         ]);
 
-        // 2) Insert each order_item
-        foreach ($cart as $productId => $entry) {
-            $product = Product::find($productId);
-            if (! $product) {
-                continue;
-            }
-
-            OrderItem::create([
-                'order_id'   => $order->id,
-                'product_id' => $product->id,
-                'quantity'   => $entry['quantity'],
-                'price'      => $entry['price'],
-            ]);
-        }
-
-        // Note: not clearing the cart here so users return to products with items intact
-        return redirect()
-            ->route('products.index')
-            ->with('success', 'Order placed successfully!');
+       // 2) Insert each order_item
+foreach ($cart as $productId => $entry) {
+    $product = Product::find($productId);
+    if (! $product) {
+        continue;
     }
+
+    OrderItem::create([
+        'order_id'   => $order->id,
+        'product_id' => $product->id,
+        'quantity'   => $entry['quantity'],
+        'price'      => $entry['price'],
+    ]);
+}
+
+// Reset cart quantities to zero but keep cart structure
+foreach ($cart as $productId => &$entry) {
+    $entry['quantity'] = 0;
+}
+session(['cart' => $cart]);
+
+// Redirect to home with a flash message
+return redirect()
+    ->route('products.index')
+    ->with('success', 'Order has been placed!');
+}
+
 }
