@@ -42,8 +42,7 @@ Route::delete('cart/remove/{product}', [CartController::class, 'remove'])
 
 // ── Checkout & Orders ────────────────────────────────────────────────────────
 // show checkout form
-Route::get('checkout', [CheckoutController::class, 'checkout'])
-     ->name('checkout');
+Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'checkout'])->name('checkout.index');
 
 // place the order
 Route::post('checkout', [CheckoutController::class, 'store'])

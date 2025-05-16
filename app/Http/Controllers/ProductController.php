@@ -13,11 +13,19 @@ class ProductController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
-    {
-        $products = Product::paginate(10);
-        return view('products.index', compact('products'));
+  public function index(Request $request)
+{
+    $query = \App\Models\Product::query();
+
+    if ($search = $request->input('search')) {
+        $query->where('name', 'like', "%{$search}%")
+              ->orWhere('description', 'like', "%{$search}%");
     }
+
+    $products = $query->get();
+
+    return view('products.index', compact('products'));
+}
 
     public function create()
     {
